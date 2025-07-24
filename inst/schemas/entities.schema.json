@@ -1,0 +1,1491 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$defs": {
+		"patternTelefonNummer": {
+			"pattern": "^\\+?[0-9\\s\\-()/]{7,20}$"
+		},
+		"patternDatum": {
+			"type": [
+				"string",
+				"null"
+			],
+			"pattern": "^(?:(?:[0-9]{4}(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\\d|3[01]))?)?)(?:[T\\s]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.\\d+)?(?:Z|[+-]([01]\\d|2[0-3]):([0-5]\\d))?)?)?(?:\\/(?:(?:[0-9]{4}(?:-(0[1-9]|1[0-2])(?:-(0[0-9]|[12]\\d|3[01]))?)?)(?:[T\\s]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.\\d+)?(?:Z|[+-]([01]\\d|2[0-3]):([0-5]\\d))?)?)?)?$"
+		},
+		"patternNonEmptyString": {
+			"type": "string",
+			"minLength": 1
+		},
+		"patternKoordinatenPunkt": {
+			"type": "string",
+			"pattern": "^(SRID=\\d+;\\s*)?POINT\\s*\\(\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?\\s*\\)$"
+		},
+		"patternKoordinatenLinie": {
+			"type": "string",
+			"pattern": "^(SRID=\\d+;\\s*)?LINESTRING\\s*\\(\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?(\\s*,\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?)+\\s*\\)$"
+		},
+		"patternKoordinatenPolygon": {
+			"type": "string",
+			"pattern": "^(SRID=\\d+;\\s*)?(POLYGON\\s*\\(\\s*\\(\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?(\\s*,\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?)+\\s*\\)\\s*\\)|MULTIPOLYGON\\s*\\(\\s*(\\(\\s*\\(\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?(\\s*,\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?)+\\s*\\)\\s*\\))(\\s*,\\s*\\(\\s*\\(\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?(\\s*,\\s*-?\\d+(\\.\\d+)?\\s+-?\\d+(\\.\\d+)?)+\\s*\\)\\s*\\))*\\s*\\))$"
+		},
+		"projektID": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternNonEmptyString"
+				},
+				{
+					"description": "Eine eindeutige Identifikationsnummer eines Projekts innerhalb eines Erfassungssystems, dem ein Nachweis zugeordnet werden kann. Die Eindeutigkeit kann, muss aber nicht universell sein, sondern lediglich innerhalb des jeweiligen Systems gewährleistet werden. Universelle Eindeutigkeit ist nicht erforderlich, da diese durch die Kombination aus Projekt-ID und Nachweis-ID sichergestellt wird",
+					"examples": [
+						"GGT775420",
+						"8653425",
+						"GHDGSF-D",
+						"443bäd1-f122-4b77-bb0b-561d79425929"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": true,
+					"x-dwc-term": "datasetId"
+				}
+			]
+		},
+		"projektName": {
+			"type": "string",
+			"description": "Name des Projektes. Projekte können auf unterschiedlichen Ebenen verstanden und erfasst werden. Ein Projekt kann dabei ein konkretes Kartier- oder Forschungsprojekt sein aber auch eine einzelne Exkursion oder eine Datensammlung innerhlab einer Datenbank. Auch wenn ein Nachweis keinem offiziellen Projekt zugeordnet ist, sollte ein aussagekräftiger Projektname vergeben werden - beispielsweise mit Bezug zu einer Person, einem Thema oder einer Institution. Die Kombination aus projektName und projektLeitung ermöglicht eine eindeutige Zuordnung und erleichtert das spätere Auffinden, Wiedererkennen und Einordnen von Nachweisen",
+			"examples": [
+				"Floristische Kartierung NRW",
+				"Exkursion Lieschen Müller 2021",
+				"Flor. Daten 2021 - LANUV"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "datasetName"
+		},
+		"projektTyp": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"Unsystematisch",
+				"Floristische Kartierung",
+				"Stichprobe",
+				"Pflanzensoziologische Aufnahme",
+				null
+			],
+			"description": "Zuordnung zu einem definierten Standardtyp von Kartierungs- oder Erfassungsprojekten. Ist eine eindeutige Zuordnung nicht möglich, wird der Wert mit `null` angegeben",
+			"examples": [
+				"Unsystematisch",
+				"Floristische Kartierung",
+				"Stichprobe",
+				"Pflanzensoziologische Aufnahme",
+				null
+			],
+			"x-comment": [
+				"Unsystematisch - Unregelmässige Gelegenheitsbeobachtungen einzelner Taxa nicht festegelegter Organismengruppen",
+				"Floristische Kartierung -Flächendeckende, rasterbasierte Erfassung aller Taxa einer definierten Organismengruppe innerhalb einer Region (z. B. Bundesland)",
+				"Stichprobe - Vollständige Erfassung aller Taxa definierter Organismengruppen auf ausgewählten Stichprobenflächen",
+				"Pflanzensoziologische Aufnahmen - Erhebung aller Taxa auf festgelegten Plotflächen nach pflanzensoziologischer Methode (z. B. Braun-Blanquet)",
+				"null - Die Kartiermethode ist nicht bekannt oder lässt sich nicht eindeutig zuordnen"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektRegion": {
+			"type": "string",
+			"description": "Angabe der Region, die im Rahmen des Projekts bearbeitet wird. Diese Region kann einer administrativen Einheit (z. B. Bundesland, Landkreis), einer naturräumlichen oder fachlich definierten Region, einem Biotop oder anderen Gliederungseinheiten entsprechen",
+			"examples": [
+				"Schwarzwald",
+				"Brandenburg",
+				"Mittelrheintal",
+				"Deutschland",
+				"Siegaü bei Troisdorf"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektRegionUmriss": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Räumliche Abgrenzung des Projektgebiets als geschloßene Polygon-Geometrie oder Multipolygon im Well-Known Text (WKT)-Format. Die Umrisslinien der einzelnen Polygone müssen geschlossen sein, d. h. die erste und letzte Koordinate müssen identisch sein. Weitere Informationen zum WKT-Format unter: http://giswiki.org/wiki/Well_Known_Text",
+			"examples": [
+				"POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))",
+				"MULTIPOLYGON (((30 10, 40 40, 20 40, 10 20, 30 10)), ((15 5, 25 25, 5 25, 15 5)))"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `projektRegionUmriss` angegeben ist, DANN muss auch `projektRegionUmrissCRS` angegeben sein und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektRegionUmrissCRS": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Koordinatenreferenzsystem der im Feld `projektRegionUmriss` gespeicherten Koordinaten. Erwartet einen gültigen EPSG-Code im Format 'EPSG:XXXX' mit 3 bis 6 Ziffern, z. B. 'EPSG:4326' - siehe Beispiele",
+			"examples": [
+				"EPSG:4326",
+				"EPSG:25832",
+				"EPSG:31466",
+				"EPSG:31467",
+				"EPSG:31468",
+				"EPSG:31469",
+				"EPSG:3857"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `projektRegionUmriss` angegeben ist, DANN muss auch `projektRegionUmrissCRS` angegeben sein und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektTaxon": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Taxon oder Organismengruppe, deren Vorkommen im Rahmen der Erhebung gezielt erfasst wurde. Diese Information kann dabei helfen, negative Nachweise (also das gezielte Nicht-Auffinden eines Taxons) besser einzuordnen - insbesondere bei der Bewertung, ob ein bestimmtes Taxon im Gebiet nicht vorkommt oder lediglich nicht erfasst wurde. Bei Vegetationsaufnahmen, die z. B. Gefäßpflanzen, Flechten und Moose umfassen, kann hier ein übergeordnetes Taxon wie „Plantae“ angegeben werden",
+			"examples": [
+				"Bromus",
+				"Taxus baccata",
+				"Tracheophyta",
+				"Plantä"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektUrl": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Link zu einer Webseite mit weiterführenden Informationen zum Projekt.",
+			"examples": [
+				"https://www.floraweb.de/"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektLeitung": {
+			"type": "string",
+			"description": "Eine Institution oder Person, die mit dem Projekt verbunden ist bzw. dieses organisiert hat. Ein Projekt kann ein konkretes Kartier- oder Forschungsprojekt sein aber auch eine einzelne Exkursion oder eine Datensammlung innerhalb einer Datenbank .Auch wenn ein Nachweis keinem offiziellen Projekt zugeordnet werden kann, sollte hier auf eine konkrete Institution oder Person verwiesen werden, die mit der Erfassung oder der Haltung des Nachweises in Verbindung steht. Die Kombination aus `projektLeitung` und `projektName` ermöglicht eine eindeutige Zuordnung und erleichtert das spätere Auffinden, Wiedererkennen und Einordnen von Nachweisen",
+			"examples": [
+				"NABU Köln",
+				"Peter Müller",
+				"LfU Bayern"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektLeitungKontakt": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe einer Kontaktadresse, unter der weitere Informationen zum Projekt angefragt werden können",
+			"examples": [
+				"Gut Alstertal, Kolkewitz",
+				"Müller F. 65734 Maienburg",
+				"Peter Bauhaus, Dorfstr. 83, 50678, Köln"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektLeitungEmailAdresse": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Eine E-Mail-Adresse, unter der Informationen zu dem Projekt und bereitgestellten Daten abgefragt werden können",
+			"examples": [
+				"ich.bins@bio.de"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"projektLeitungTelefonNummer": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternTelefonNummer"
+				},
+				{
+					"type": [
+						"string",
+						"null"
+					],
+					"description": "Eine Telefonnummer, unter der Informationen zu dem Projekt und bereitgestellten Daten abgefragt werden können.",
+					"examples": [
+						"+49 89 1234567",
+						"017564356890",
+						"0049 30 1234567",
+						"(089) 123 456",
+						"030-12345678",
+						"+49-30/12345678"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": false,
+					"x-dwc-term": null
+				}
+			]
+		},
+		"ereignisID": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Eine innerhalb eines Erfassungssystems eindeutige Identifikationsnummer für ein Ereignis, dem ein Nachweis zugeordnet werden kann. Dieses Ereignis dient zusätzlich zur Projektzuordnung der weiteren Konkretisierung von Nachweisen. Innerhalb eines Projekts sind daher zusätzliche Ereignissee denkbar, wie etwa einzelne Exkursionen oder Datenpakete. Das Ereignis kann, muss aber nicht in direktem Bezug zum Projekt stehen",
+			"examples": [
+				"GGT775420",
+				"8653425",
+				"GHDGSF-D"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "eventID"
+		},
+		"ereignisName": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Ein innerhalb eines Erfassungssystems eindeutig definierter Name für ein Ereignis, dem ein Nachweis zugeordnet werden kann. Dieses Ereignis dient zusätzlich zur Projektzuordnung der weiteren Konkretisierung von Nachweisen. Innerhalb eines Projekts sind daher zusätzliche Ereignisse denkbar, wie etwa einzelne Exkursionen oder Datenpakete. Das Ereignis kann, muss aber nicht in direktem Bezug zum Projekt stehen",
+			"examples": [
+				"Exkursion 01. Mai 2024 Siebengebirge",
+				"Peter Müller 2022",
+				"Datenpaket 2022/02",
+				"Funde März-Mai"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"ereignisDatum": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternDatum"
+				},
+				{
+					"description": "Datum (und ggf. Uhrzeit), an dem ein Ereignis stattgefunden hat. Die Angabe folgt dem internationalen Standard der ISO (ISO 8601). Es kann ein vollständiges Datum mit sekundengenauer Uhrzeit oder auch nur eine Jahresangabe sein (siehe Beispiele). Zeitintervalle werden durch mithilfe eines '/' dargestellt (von/bis). Für mehr Informationen siehe z. B. https://www.w3.org/TR/NOTE-datetime",
+					"examples": [
+						"2024",
+						"2024-04",
+						"2024-04-18",
+						"2024-04-18T12:30:45",
+						"2024-04-18T12:30:45Z",
+						"2024-04-18T12:30:45.123+05:00",
+						"2024-04-18T12:30:45Z/2025-01-01T00:00:00Z"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": true,
+					"x-dwc-term": "eventDate"
+				}
+			]
+		},
+		"lokalitaetID": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternNonEmptyString"
+				},
+				{
+					"type": [
+						"string",
+						"null"
+					],
+					"description": "Eine innerhalb eines Erfassungssystems eindeutige Identifikationsnummer einer räumlichen Erfassungseinheit",
+					"examples": [
+						"TR-30",
+						"47586",
+						"HTZLO-PP"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": true,
+					"x-dwc-term": "locationID"
+				}
+			]
+		},
+		"lokalitaetName": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Eine Benennung und/oder Beschreibung der räumlichen Erfassungseinheit. Dies kann beispielsweise ein Messtischblatt, ein Biotop oder auch ein Wegpukt sein",
+			"examples": [
+				"Messtischblatt Nr.6814 Landau i. d. Pfalz",
+				"BT-K-01215 "
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "locality"
+		},
+		"lokalitaetTyp": {
+			"type": "string",
+			"enum": [
+				"Polygonflaeche",
+				"Rasterfeld",
+				"Transektlinie",
+				"Punkt"
+			],
+			"description": "Typ der räumlichen Erfassungseinheit, der einem Nachweis zugewiesen wurde",
+			"examples": [
+				"Punkt",
+				"Transektlinie",
+				"Polygonflaeche",
+				"Rasterfeld"
+			],
+			"x-comment": [
+				"Polygonflaeche - Der Nachweis wurde innerhalb einer umgrenzten Polygonflaeche erfasst",
+				"Rasterfeld - Der Nachweis wurde innerhalb eines Rasterfeldes erfasst (Spezialfall einer standardisiert festgelegten Polygonflaeche)",
+				"Transektlinie - Der Nachweis wurde im Verlauf einer Begehung entlang einer aufgezeichneten Transsektlinie erfasst",
+				"Punkt - Der Nachweis wurde mit den Punktkoordinaten des Fund-/Beobachtungsortes erfasst"
+			],
+			"x-Bedingung": [
+				"WENN `lokalitaetTyp` = `Polygonflaeche` ODER `Rasterfeld`,DANN `lokalitaetKoordinaten` = `POLYGON` ODER `MULTIPOLYGON`",
+				"WENN `lokalitaetTyp` =`Transektlinie`, DANN `lokalitaetKoordinaten` = `LINESTRING `",
+				"WENN `lokalitaetTyp` = `Punkt`, DANN `lokalitaetKoordinaten` = `POINT `"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"lokalitaetFlaeche": {
+			"type": [
+				"number",
+				"null"
+			],
+			"description": "Größe (in Quadratmetern) der Lokalität, bezogen auf den Typ der räumlichen Erfassungseinheit (`lokalitaetTyp`), in der der Nachweis erfasst wurde. Die Angabe kann sich auf die Fläche eines Rasterfeldes oder einer Polygonflaeche beziehen aber auch auf kleinere Flächen wie zum Beispiel die Probefläche einer Vegetationsaufnahme, die typischerweise nur durch einen Koordinatenpunkt repräsentiert wird. Für Transekte kann die Fläche ebenfalls angegeben werden (Länge x Breite). Es sind ganze Zahlen oder Dezimalzahlen zulässig",
+			"examples": [
+				40,
+				25.5,
+				null
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"lokalitaetLaenge": {
+			"type": [
+				"number",
+				"null"
+			],
+			"description": "Länge (in Metern) einer Transektlinie, entlang derer der Nachweis erfasst wurde. Es sind ganze Zahlen oder Dezimalzahlen zulässig",
+			"examples": [
+				40,
+				25.5,
+				null
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"lokalitaetHoeheMax": {
+			"type": [
+				"number",
+				"null"
+			],
+			"pattern": "^\\d+(?:/\\d+)?$",
+			"description": "Höhenangabe (wenn nicht anders in `lokalitaetHoeheBezugssystem' angegeben in Metern). Hier der höchste Punkt der Lokalität. Wenn angegeben, bezogen auf das Höhendatum in `lokalitaetHoeheBezugssystem`,",
+			"examples": [
+				1100,
+				50.4,
+				0,
+				-6
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "maximumElevationInMeters"
+		},
+		"lokalitaetHoeheMin": {
+			"type": [
+				"number",
+				"null"
+			],
+			"pattern": "^\\d+(?:/\\d+)?$",
+			"description": "Höhenangabe (wenn nicht anders in `lokalitaetHoeheBezugssystem' angegeben in Metern). Hier der niedrigste Punkt der Lokalität. Wenn angegeben, bezogen auf das Höhendatum in `lokalitaetHoeheBezugssystem`,",
+			"examples": [
+				1100,
+				50.4,
+				0,
+				-6
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "minimumElevationInMeters"
+		},
+		"lokalitaetHoeheBezugssystem": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "EPSG-Code eines Höhenbezugsystem der in den Feldern `lokalitaetHoeheMin` und `lokalitaetHoeheMax` gespeicherten Angaben in Bezug auf die Lokalität. Erwartet einen gültigen EPSG-Code im Format 'EPSG:XXXX' mit 3 bis 6 Ziffern, z. B. 'EPSG:4326' - siehe Beispiele",
+			"examples": [
+				"EPSG:5714"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "verticalDatum"
+		},
+		"lokalitaetKoordinaten": {
+			"type": "string",
+			"description": "Punkt-, Linien- oder Polygonkoordinaten (auch Multipolygon) der dem Nachweis zugeordneten Erfassungseinheit. Angabe als Well-known Text (WKT): http://giswiki.org/wiki/Well_Known_Text",
+			"examples": [
+				"POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))",
+				"POLYGON ((500000 4649776, 600000 5438390, 400000 5438390, 300000 5000000, 500000 4649776))",
+				"LINESTRING (30 10, 10 30, 40 40)",
+				"LINESTRING (500000 4649776, 300000 5438390, 600000 5438390)",
+				"LINESTRING (-20.0 -30.0, 10.5 40.5)",
+				"POINT (30 10)",
+				"POINT (500000 4649776)",
+				"MULTIPOLYGON (((-10 -10, 10 10, -10 10, -10 -10)), ((5 5, 6 6, 5 6, 5 5)))"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `lokalitaetTyp` = `Polygonflaeche` ODER `Rasterfeld`,DANN `lokalitaetKoordinaten` = `POLYGON` ODER `MULTIPOLYGON`",
+				"WENN `lokalitaetTyp` =`Transektlinie`, Dann `lokalitaetKoordinaten` = `LINESTRING `",
+				"WENN `lokalitaetTyp` = `Punkt`, Dann `lokalitaetKoordinaten` = `POINT `"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "footprintWKT"
+		},
+		"lokalitaetKoordinatenCRS": {
+			"type": "string",
+			"description": "Koordinatenreferenzsystem der im Feld `lokalitaetKoordinaten` gespeicherten Koordinaten der Erfassungseinheit, die einem Nachweis zugeordnet ist. Erwartet einen gültigen EPSG-Code im Format 'EPSG:XXXX' mit 3 bis 6 Ziffern, z. B. 'EPSG:4326' - siehe Beispiele",
+			"examples": [
+				"EPSG:4326",
+				"EPSG:25832",
+				"EPSG:31466",
+				"EPSG:31467",
+				"EPSG:31468",
+				"EPSG:31469",
+				"EPSG:3857"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "footprintSRS"
+		},
+		"lokalitaetKoordinatenUnschaerfe": {
+			"type": [
+				"number",
+				"null"
+			],
+			"description": "Radius der räumlichen Unschärfe um die Koordinaten der Erfassungseinheit. Handelt es sich um Punktkoordinaten (`lokalitaetTyp` = `Punkt`) so bezieht sich die Unschärfe auf den Punkt, bei Polygonen wird angenommen, dass die Unschärfe sich auf alle Punkte bezieht (z. B. Mittelwert).",
+			"examples": [
+				2,
+				200,
+				300.67
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "coordinateUncertaintyInMeters"
+		},
+		"lokalitaetKoordinatenCentroid": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "WKT der Koordinaten des Mittelpunkts bzw. räumlichen Schwerpunkts (Centroid) der einem Nachweis zugeordneten Erfassungseinheit. Bei punktförmigen Objekten (`lokalitaetTyp` = `Punkt`) sind `lokalitaetKoordinaten` und `lokalitaetKoordiatenCentroid` identisch",
+			"examples": [
+				"POINT (30 10)",
+				"POINT (500000 4649776)"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"lokalitaetKoordinatenCentroidUnschaerfe": {
+			"type": [
+				"number",
+				"null"
+			],
+			"description": "Radius der räumlichen Unschärfe um den Mittelpunkt (Centroid) der Erfassungseinheit. Bei einem 1×1km großen Rasterfeld beträgt dieser Radius 1km. Bei punktscharfen Angaben (`lokalitaetTyp` = „Punkt“) beschreibt der Wert den Unsicherheitsradius um den angegebenen Punkt und ist identisch mit `lokalitaetKoordinatenUnschaerfe`. Es sind ganze Zahlen oder Dezimalzahlen zulässig",
+			"examples": [
+				2,
+				200,
+				300.67
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"lokalitaetKoordinatenGenerierung": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe darüber, wie die Koordinaten der räumlichen Erfassungseinheit ermittelt wurden, die dem Nachweis zugeordnet ist",
+			"examples": [
+				"Planzeiger",
+				"Digitalisierungstisch",
+				"Digitalkarte",
+				"Satellitensystem",
+				"GPS",
+				null
+			],
+			"x-comment": [
+				"Planzeiger - Mit einem Planzeiger von einem physischen Kartenblatt ermittelt",
+				"Digitalisierungstisch - Von einem physischen Kartenblatt an einem Digitalisierungstisch erfasst",
+				"Digitalkarte - Auf einer digitalen Karte auf dem Bildschirm erfasst",
+				"Satellitensystem - Mit Hilfe eines Navigationssatellitensystems (GPS, Galileo, GNSS) im Gelände aufgezeichnet"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "georeferenceProtocol"
+		},
+		"lokalitaetAggregiert": {
+			"type": "boolean",
+			"description": "Die angegebene Lokalität stellt eine Aggregierung und damit Vergröberung (sekundärer Raumbezug) des bei der Erfassung zugewiesenen Raumbezugs dar (primärer Raumbezug). Aggregierung, z. B. auf Rasterzellenebene ist üblich um genaue Fundorte bedrohter Bestände zu verschleiern.",
+			"examples": [
+				true,
+				false
+			],
+			"x-comment": [
+				"false - Primärer Raumbezug (bei Erfassung zugewiesen)",
+				"true - Sekundärer Raumbezug (nachträglich aggregiert, z. B. auf Rasterzellenebene)"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"personID": {
+			"type": [
+				"string",
+				"null"
+			],
+			"minLength": 1,
+			"description": "Eine eindeutige Identifikationsnummer einer Person innerhalb eines Erfassungssystems, die dem Nachweis zugeordnet ist (z. B. als beobachtende oder sammelnde Person). Bei mehreren Beteiligten ist die ID der zuerst genannten Person anzugeben",
+			"examples": [
+				"TR-30",
+				"47586",
+				"HTZLO-PP",
+				"Karl-B447"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "recordedByID"
+		},
+		"personName": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Name der Person(en), die den Nachweis erbracht hat/haben.",
+			"examples": [
+				"A. Mustermensche, F. Falkenberg, Sabine Müller",
+				"Petersen S.",
+				"Müller"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "recordedBy"
+		},
+		"nachweisID": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternNonEmptyString"
+				},
+				{
+					"description": "Eine eindeutige Identifikationsnummer eines Nachweises innerhalb eines Erfassungssystems",
+					"examples": [
+						"TR-30",
+						"47586",
+						"HTZLO-PP"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": true,
+					"x-dwc-term": "occurrenceID"
+				}
+			]
+		},
+		"nachweisDatum": {
+			"type": "string",
+			"description": "Datum (und ggf. Uhrzeit),an dem ein Nachweis getätigt wurde. Die Angabe folgt dem internationalen Standard der ISO (ISO 8601). Es kann ein vollständiges Datum mit sekundengenauer Uhrzeit oder auch nur eine Jahresangabe sein (siehe Beispiele). Zeitintervalle werden durch mithilfe eines '/' dargestellt (von/bis). Für mehr Informationen siehe z. B. https://www.w3.org/TR/NOTE-datetime",
+			"examples": [
+				"2024",
+				"2024-04",
+				"2024-04-18",
+				"2024-04-18T12:30:45",
+				"2024-04-18T12:30:45Z",
+				"2024-04-18T12:30:45.123+05:00",
+				"2024-04-18T12:30:45Z/2025-01-01T00:00:00Z"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisVorkommenStatus": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"Praesenz",
+				"Absenz",
+				null
+			],
+			"description": "Statusangabe über die Anwesenheit oder Abwesenheit eines Taxons innerhalb der angegebenen räumlichen Erfassungseinheit (Lokalität)",
+			"examples": [
+				"Praesenz",
+				"Absenz"
+			],
+			"x-comment": [
+				"Praesenz - Das Taxon ist in der angegebenen räumlichen Erfassungseinheit vorhanden",
+				"Absenz - Das Taxon ist in der angegebenen räumlichen Erfassungseinheit abwesend"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "occurrenceStatus"
+		},
+		"nachweisVorkommenAnsiedlung": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"verwildert",
+				"ausgebracht",
+				"spontan",
+				"kultiviert",
+				null
+			],
+			"description": "Am Fundort beobachtbarer Ansiedlungsstatus des Taxons. Diese Angabe beschreibt, ob die Ansiedlung eines Taxons am Fundort natürlich erfolgt ist oder durch anthropogene Maßnahmen beeinflusst wurde. Die möglichen Werte sind bewusst weit gefasst, um potenzielle Konkretisierungen mit abzudecken. So kann beispielsweise der Wert ausgebracht auch spezifischere Begriffe wie angesalbt oder wiederangesiedelt umfassen. Auf eine detailliertere Klassifizierung wurde verzichtet, da die genauen Ursachen und Umstände von Ansiedlungsereignissen häufig nicht eindeutig feststellbar sind",
+			"examples": [
+				"verwildert",
+				"ausgebracht",
+				"kultiviert",
+				"spontan"
+			],
+			"x-comment": [
+				"verwildert - Das Taxon ist aus nahegelegenen Kulturen oder Gärten an den Fundort gelangt, ohne dass es dort gezielt angesiedelt wurde",
+				"ausgebracht -Das Taxon wurde am Fundort gezielt vom Menschen angesiedelt, z. B. durch Aussaat oder Anpflanzung",
+				"kultiviert - Das Taxon wurde am Fundort gezielt angepflanzt und wird aktiv gepflegt oder in seiner Entwicklung unterstuetzt (z. B. durch Bewässerung oder Schutz vor Konkurrenz)",
+				"spontan - Das Taxon hat sich am Fundort ohne (erkennbares) menschliches Zutun selbstständig angesiedelt"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "pathway"
+		},
+		"nachweisQuantitaetTyp": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"KlasseHaeufigkeit",
+				"ProzentDeckung",
+				"DeckungBraunBlanquet",
+				"Zaehleinheit",
+				"DeckungLondo",
+				null
+			],
+			"description": "Angabe des Typs der Quantitäts- bzw. Abundanzbewertung eines Taxons innerhalb der definierten räumlichen Erfassungseinheit",
+			"examples": [
+				"KlasseHaeufigkeit",
+				"ProzentDeckung",
+				"DeckungBraunBlanquet",
+				"Zaehleinheit",
+				"DeckungLondo"
+			],
+			"x-comment": [
+				"KlasseHaeufigkeit - Die Häufigkeit eines Taxons wird anhand vordefinierter Häufigkeitsklassen in Bezug auf die primäre Raumeinheit eingeschätzt. Als Wert wird der Index der Klasse angegeben, die von selten bis häufig geordnet ist",
+				"ProzentDeckung - Prozentuale Angabe der Fläche, die durch das beobachtete Taxon innerhalb der primären Raumeinheit bedeckt wird",
+				"DeckungBraunBlanquet - Der Wert entspricht einem Deckungsgrad gemäss der Braun-Blanquet-Skala, wie sie in pflanzensoziologischen Aufnahmen verwendet wird",
+				"Zaehleinheit - Angabe einer gezählten oder geschätzten Anzahl von Exemplaren oder zählbaren Einheiten (z.B. Sprosse, Horste)",
+				"DeckungLondo - Der Wert entspricht einem Deckungsgrad gemäss der Londo-Skala"
+			],
+			"x-Bedingung": [
+				"WENN nachweisQuantitaetTyp = `KlasseHäufigkeit` DANN muss `nachweisQuantitaetKlassen` angegeben werden und darf nicht `null` sein UND und `nachweisQuantitaetWert` muss einen Wert >0 haben",
+				"WENN nachweisQuantitaetTyp = `Zähleinheit` DANN muss `nachweisQuantitaetZaehlEinheit` angegeben werden und darf nicht `null` sein UND und `nachweisQuantitaetWert` muss einen Wert >0 haben",
+				"WENN nachweisQuantitaetTyp = `DeckungBraunBlanquet` DANN muss `nachweisQuantitaetWert` einen der Werte: r, +, 1, 2m, 2a, 2b, 3, 4, 5 haben",
+				"WENN nachweisQuantitaetTyp = `ProzentDeckung ` DANN muss `nachweisQuantitaetWert` ein Wert zwischen 0-100 haben",
+				"WENN nachweisQuantitaetTyp = `DeckungLondo`, DANN muss `nachweisQuantitaetWert` einen der Werte: +, 1,2,3,4,5,6,7 haben"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "organismQuantityType"
+		},
+		"nachweisQuantitaetWert": {
+			"type": [
+				"string",
+			 "number", 
+			 "null"],
+			"description": "Der Wert einer Häufigkeitsangabe bezogen auf `nachweisQuantitaetTyp`. Die möglichen Werte richten sich nach der jeweils verwendeten Skala. So sind beispielsweise bei Verwendung der Braun-Blanquet-Skala die gebräuchlichen Werte wie r, 2m oder 3 eintragbar. Bei Prozentangaben (Prozentdeckung) sind numerische Werte zwischen 0 und 100 zulässig - zum Beispiel 12,5 für 12,5 % Deckung",
+			"examples": [
+				"1",
+				"r",
+				"100",
+				"2m",
+				"17.8",
+				null
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisQuantitaetTyp` angegeben ist, DANN muss auch `nachweisQuantitaetWert` angegeben sein UND darf nicht `null` sein",
+				"WENN `nachweisQuantitaetTyp` = `DeckungBraunBlanquet`, DANN darf `nachweisQuantitaetWert` nicht `null` sein UND es sind nur folgende Werte erlaubt: +, 1, 2m, 2a, 2b, 3, 4, 5",
+				"WENN `nachweisQuantitaetTyp` = `ProzentDeckung`, DANN darf `nachweisQuantitaetWert` nicht `null` sein UND der Wert muss im Bereich zwischen 0 und 100 liegen",
+				"WENN `nachweisQuantitaetTyp` = `DeckungLondo`, DANN darf `nachweisQuantitaetWert` nicht `null` sein UND es sind nur folgende Werte erlaubt: +, 1, 2, 3, 4, 5, 6, 7",
+				"WENN `nachweisQuantitaetTyp` = `KlasseHäufigkeit` ODER `Zähleinheit`, DANN darf `nachweisQuantitaetWert` nicht `null` sein UND der Wert muss grösser als 0 sein",
+				"WENN `nachweisQuantitaetTyp` = `null`, DANN muss `nachweisQuantitaetWert` den Wert `null` haben"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "organismQuantity"
+		},
+		"nachweisQuantitaetKlassen": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Wenn `nachweisQuantitaetTyp` = `KlasseHäufigkeit` ist, müssen hier Klassenabgrenzungen eingetragen oder Verweise auf die verwendeten Häufigkeitsklassen (z. B. Publikationen) angegeben werden. Bei individuellen oder nicht veröffentlichten Häufigkeitsklassen ist diese Angabe von besonderer Wichtigkeit.",
+			"examples": [
+				"1 =0-10 % Deckung",
+				"2 = 10-20 % Deckung"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN nachweisQuantitaetTyp = `KlasseHäufigkeit`, DANN muss `nachweisQuantitaetKlassen` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisQuantitaetZaehlEinheit": {
+			"type": [
+										"string", "null"
+									],
+									"enum": [
+										"Individuen",
+										"Sprosse",
+										"Horste",
+										"Flaeche",
+										null
+									],
+			"description": "Wenn `nachweisQuantitaetTyp` = `Zähleinheit`ist, muss hier angegeben werden, in welcher Einheit die Quantität eines Taxons innerhalb einer Erfassungseinheit gezählt wurde (z. B. einzelne Individuen, Sprosse oder Horste)",
+			"examples": [
+				"Individuen",
+				"Sprosse",
+				"Horste"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisQuantitaetTyp` = `Zaehleinheit`, DANN muss `nachweisQuantitaetZaehlEinheit` angegeben werden und darf nicht `null`sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisQuantitaetMethode": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"Zaehlung",
+				"Schaetzung",
+				"Berechnung",
+				null
+			],
+			"description": "Die Methode, mit der die Quantität eines Taxons in Bezug auf den Typ ( `nachweisQuantitaetTyp`) innerhalb einer Erfassungseinheit (`lokalitaetTyp`) ermittelt wurde",
+			"examples": [
+				"Zaehlung",
+				"Schaetzung",
+				"Berechnung"
+			],
+			"x-comment": [
+				"Zaehlung - Die Quantität eines Taxons wurde durch direkte Zählung innerhalb der Erfassungseinheit ermittelt (z. B. Anzahl von Individuen, Sprossen oder Horsten)",
+				"Schaetzung - Die Quantität eines Taxons wurde durch visuelle oder methodische Schätzung innerhalb der Erfassungseinheit ermittelt (z. B. geschätzte Individuenzahl oder prozentuale Bedeckung)",
+				"Berechnung - Die Quantität eines Taxons wurde mittels Hochrechnung oder Modellierung ermittelt (z. B. aus Stichproben, Flächenumrechnungen oder Verteilungsschätzungen)"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisBestimmungVon": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Der Name der Person(en), die eine Bestimmung des Nachweises erstmalig vorgenommen hat/haben",
+			"examples": [
+				"M. Mustermensch",
+				"Sabine K.",
+				"Dorothea Camilla Durchdiewand, Jason Märzenbecher, Carola Tulpenbein"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "identifiedBy"
+		},
+		"nachweisBestimmungWoertlich": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Die für den Nachweis erstmalig angegeben Bestimmung (bei der Erfassung oder auf einem Beleg). Diese Bestimmung kann, muss aber nicht dem gültigen wissenschaftlichen Namen entsprechen. Es handelt sich um eine Freitext-Eingabe, in der die originale Schreibweise übernommen wird - inklusive eventueller Schreibfehler, abweichender Schreibweisen oder veralteter Nomenklatur. Unterarten, Varietäten, Formen und Hybride können durch die entsprechenden Kürzel angegeben werden: z. B.: subsp., var., f., × (bzw. x). Auch volkstümliche Bezeichnungen sowie Angaben von Bestimmungsqualifikatoren sind zulässig",
+			"examples": [
+				"Violettes Stiefmütterchen",
+				"Lamium spec. ?",
+				"Baum",
+				"cf. Silene dioica"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "verbatimIdentification"
+		},
+		"nachweisBestimmungDatum": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternDatum"
+				},
+				{
+					"type": [
+						"string",
+						"null"
+					],
+					"description": "Datum (und optional Uhrzeit) der Bestimmung. Die Angabe folgt dem internationalen Standard der ISO (ISO 8601). Es kann ein vollständiges Datum mit sekundengenauer Uhrzeit oder auch nur eine Jahresangabe sein (siehe Beispiele). Zeitintervalle werden durch mithilfe eines '/' dargestellt (von/bis). Für mehr Informationen siehe z. B. https://www.w3.org/TR/NOTE-datetime",
+					"examples": [
+						"2024",
+						"2024-04",
+						"2024-04-18",
+						"2024-04-18T12:30:45",
+						"2024-04-18T12:30:45Z",
+						"2024-04-18T12:30:45.123+05:00",
+						"2024-04-18T12:30:45Z/2025-01-01T00:00:00Z"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": true,
+					"x-dwc-term": "dateIdentified"
+				}
+			]
+		},
+		"nachweisBestimmungRevidiertVon": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Der Name der Person(en), die eine Bestimmung zuletzt revidiert hat/haben",
+			"examples": [
+				"M. Mustermensch",
+				"Sabine K.",
+				"Dorothea Camilla Durchdiewand, Jason Märzenbecher, Carola Tulpenbein"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisBestimmungRevidiertDatum": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternDatum"
+				},
+				{
+					"type": [
+						"string",
+						"null"
+					],
+					"description": "Datum (und optional Uhrzeit) wann die Bestimmung eines Nachweises revidiert wurde. Die Angabe folgt dem internationalen Standard der ISO (ISO 8601). Es kann ein vollständiges Datum mit sekundengenauer Uhrzeit oder auch nur eine Jahresangabe sein (siehe Beispiele). Zeitintervalle werden durch mithilfe eines '/' dargestellt (von/bis). Für mehr Informationen siehe z. B. https://www.w3.org/TR/NOTE-datetime",
+					"examples": [
+						"2024",
+						"2024-04",
+						"2024-04-18",
+						"2024-04-18T12:30:45",
+						"2024-04-18T12:30:45Z",
+						"2024-04-18T12:30:45.123+05:00",
+						"2024-04-18T12:30:45Z/2025-01-01T00:00:00Z"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": false,
+					"x-dwc-term": null
+				}
+			]
+		},
+		"nachweisBestimmungPruefStatus": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"ungeprueft",
+				"plausibel",
+				"unplausibel",
+				"verifiziert",
+				"falsch",
+				null
+			],
+			"description": "Angabe, ob und mit welchem Ergebnis die Bestimmungen eines Nachweises überprüft wurde",
+			"examples": [
+				"ungeprueft",
+				"plausibel",
+				"unplausibel",
+				"verifiziert",
+				"falsch",
+				null
+			],
+			"x-comment": [
+				"ungepueft - Die Bestimmung des Nachweises wurde durch keine weitere Person überprüft",
+				"unplausibel - Die Bestimmung des Nachweises wurde darauf geprüft ob das Gebiet im bekannten Verbreitungsareal des Taxons liegt oder ob der Fundort ungewöhnlich ist und fuer unplausibel befunden",
+				"plausibel - Die Bestimmung des Nachweises wurde darauf geprüft ob das Gebiet im bekannten Verbreitungsareal des Taxons liegt oder ob der Fundsort ungewöhnlich ist und fuer plausibel befunden",
+				"verifiziert - Die Bestimmung des Nachweises wurde am Fundort oder durch Belege/Bilder überprüft und für korrekt befunden",
+				"falsch - Die Bestimmung des Nachweises wurde am Fundort oder durch Belege/Bilder überprüft und für falsch befunden",
+				"null - Ob die Bestimmung des Nachweises überprüft wurde, ist nicht bekannt"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "identificationVerificationStatus"
+		},
+		"nachweisBestimmungPruefStatusInfo": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe darüber wie es zu der Einschätzung bezüglich der Sicherheit über die Bestimmung einen Nachweis in `nachweisBestimmungPruefStatus` gekommen ist",
+			"examples": [
+				"Falsch weil Vorort überprüfung zu einer anderen Art geführt hat",
+				"Plausibel weil überlappend mit Arealkarte in Floraweb"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisTyp": {
+			"type": "string",
+			"enum": [
+				"Beobachtung",
+				"Beleg",
+				"Quelle"
+			],
+			"description": "Angabe zum Typ des Nachweises. Hinweis: Liegt ein Beleg zu einer Beobachtung vor, sollte dieser vorrangig als Nachweis Typ angegeben werden, da er als valider und überprüfbarer gilt und wichtige Informationen konserviert",
+			"examples": [
+				"Beobachtung",
+				"Beleg",
+				"Quelle"
+			],
+			"x-comment": [
+				"Beobachtung - Nachweis auf Grundlage einer direkten Beobachtung vor Ort, einschliesslich Beobachtungen aus Citizen-Science-Plattformen wie Flora Incognita, iNaturalist oder ähnlichen. Dieser Typ umfasst auch persönliche Notizen sowie nicht formell dokumentierte Mitteilungen (z. B. mündliche überlieferungen oder E-Mails)",
+				"Beleg - Nachweis durch ein physisches Exemplar (z. B. Herbarbeleg). Liegt ein Beleg zu einer Beobachtung vor, sollte dieser vorrangig als Nachweis angegeben werden, da er als valider und überprüfbarer gilt",
+				"Quelle - Nachweis basierend auf bereits vorhandenen Angaben aus Literatur, Karteien oder Archiven. Solche Quellen sollten schriftlich dokumentiert, auffindbar und zitierbar sein. Mündliche überlieferungen oder persönliche Mitteilungen zählen nicht als Quelle, sondern sind Beobachtungen zuzuordnen"
+			],
+			"x-Bedingung": [
+				"WENN `nachweisTyp` = `Beleg`, DANN muss `nachweisBelegID`, `nachweisBelegSammlungsInstitut`, `nachweisBelegSammlungsInstitutOrt` angegeben werden",
+				"Wenn `nachweisTyp` = `Quelle`, DANN muss `nachweisQuelleTyp`, nachweisQuelleZitat, nachweisQuellePubliziert"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "basisOfRecord"
+		},
+		"nachweisTaxonFloristischerStatus": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe über den floristischen Status des Taxons, dem der Nachweis zugewiesen wurde, bezogen auf einen bestimmten Bezugsraum. Dieser Bezugsraum kann, muss aber nicht mit der in `projektRegion` angegebenen Region übereinstimmen. Der floristische Status wird hier als ein Attribut der taxonomischen Referenz verstanden, das sich auf eine Region bezieht - nicht als direkte Eigenschaft des einzelnen Nachweises oder Fundes. Auf eine feste Werteliste wurde bewusst verzichtet, da die verwendeten Begrifflichkeiten bundesweit stark variieren. Die Angaben sind stets im Kontext des jeweiligen geographischen oder fachlichen Bezugsraums zu interpretieren",
+			"examples": [
+				"Normalstatus",
+				"synanthrop",
+				"unbekannt",
+				"gebietsfremd"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisTaxonFloristischerStatus` angegeben und nicht `null` ist, DANN muss auch `nachweisTaxonFloristischerStatusBezugsRaum` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "establishmentMeans"
+		},
+		"nachweisTaxonFloristischerStatusBezugsRaum": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Der Bezugsraum für welchen der floristische Status in `nachweisTaxonFloristischerStatus` gilt. Dieser Bezugsraum kann, muss aber nicht mit der in `projektRegion` angegebenen Region übereinstimmen. Der floristische Status wird hier als ein Attribut der taxonomischen Referenz verstanden, das sich auf eine Region bezieht - nicht als direkte Eigenschaft des einzelnen Nachweises oder Fundes",
+			"examples": [
+				"Bayern",
+				"Deutschland",
+				"Unterfranken"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisTaxonFloristischerStatus` angegeben und nicht `null` ist, DANN muss auch `nachweisTaxonFloristischerStatusBezugsRaum` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisTaxonDauerhaftigkeit": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"Dauerhaft",
+				"Unbeständig",
+				null
+			],
+			"description": "Einschätzung zur Dauerhaftigkeit des Vorkommens eines Taxons im jeweiligen Bezugsraum (`nachweisTaxonBezugsRaum`)",
+			"examples": [
+				"dauerhaft",
+				"unbeständig"
+			],
+			"x-comment": [
+				"dauerhaft - Es wird angenommen, dass das Taxon sich im Bezugsraum dauerhaft etabliert hat und dort regelmässig vorkommt. Das Vorkommen besteht seit längerer Zeit und erhält sich selbstständig.",
+				"unbeständig - Es wird angenommen, dass das Taxon im Bezugsraum nur unregelmässig oder vorübergehend auftritt und keine sich selbst erhaltende Population bildet"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "degreeOfEstablishment"
+		},
+		"nachweisTaxonName": {
+			"type": "string",
+			"description": "Der für den Nachweis verwendete vollständige wissenschaftliche Name (inkl. Autor) des untersten bestimmbaren taxonomischen Rangs. Unterarten, Varietäten, Formen und Hybride können durch die entsprechenden Kürzel angegeben werden: z.B.: subsp., var., f., × (bzw. x).",
+			"examples": [
+				"Erica vulgaris L.",
+				"Ägilops speltoides subsp. ligustica (Savign.) Zhuk.",
+				"Triticum ovatum var. echinus (Godr.) Thell.",
+				"Agrostis vulgaris f. umbrosa (Schur) Junge",
+				"Asplenium septentrionale × trichomanes subsp. trichomanes",
+				"Atriplex longipes × prostrata"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "scientificName"
+		},
+		"nachweisTaxonNameID": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Eine eindeutige und persistente Identifikationsnummer des wissenschaftlichen Namens innerhalb der verwendeten taxonomischen Referenzdatenbank (wie`nachweisTaxonRefDatenbank`). Diese ID gewährleistet eine zuverlässige und dauerhafte Zuordnung, auch bei zukünftigen taxonomischen änderungen oder Synonymisierungen",
+			"examples": [
+				"34523",
+				"HD-8999",
+				"7878TZ"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "scientificNameID"
+		},
+		"nachweisTaxonNameAkzeptiert": {
+			"type": "string",
+			"description": "Wenn der in `nachweisTaxonName` angegebene Name (laut `nachweisTaxonRefDatenbank`) ein Synonym ist, wird hier der laut `nachweisTaxonRefDatenbank` aktuell akzeptierte Name angegeben. Andernfalls ist er identisch mit `nachweisTaxonName`. Unterarten, Varietäten, Formen und Hybride können durch die entsprechenden Kürzel angegeben werden, z. B.: subsp., var., f., × (bzw. x)",
+			"examples": [
+				"Calluna vulgaris (L.) HULL"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "acceptedNameUsage"
+		},
+		"nachweisTaxonNameAkzeptiertID": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Eine eindeutige und persistente Identifikationsnummer des aktuell akzeptierten wissenschaftlichen Namens innerhalb der verwendeten taxonomischen Referenzdatenbank (`nachweisTaxonRefDatenbank`). Diese ID verweist unabhängig von Synonymen oder taxonomischen Änderungen auf den gültigen Namen",
+			"examples": [
+				"34523",
+				"HD-8999",
+				"7878TZ"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "acceptedNameUsageID"
+		},
+		"nachweisTaxonRang": {
+			"type": [
+				"string",
+				"null"
+			],
+			"enum": [
+				"regnum",
+				"subregnum",
+				"divisio",
+				"subdivisio",
+				"classis",
+				"subclassis",
+				"ordo",
+				"subordo",
+				"familia",
+				"subfamilia",
+				"tribus",
+				"subtribus",
+				"genus",
+				"subgenus",
+				"sectio",
+				"subsectio",
+				"series",
+				"subseries",
+				"species",
+				"subspecies",
+				"aggregatio",
+				"varietas",
+				"subvarietas",
+				"forma",
+				"subforma",
+				null
+			],
+			"description": "Die taxonomische Rangstufe des spezifischsten Namens in `nachweisTaxonName`.",
+			"examples": [
+				"regnum",
+				"subregnum",
+				"divisio",
+				"subdivisio",
+				"classis",
+				"subclassis",
+				"ordo",
+				"subordo",
+				"familia",
+				"subfamilia",
+				"tribus",
+				"subtribus",
+				"genus",
+				"subgenus",
+				"sectio",
+				"subsectio",
+				"series",
+				"subseries",
+				"species",
+				"subspecies",
+				"aggregatio",
+				"varietas",
+				"subvarietas",
+				"forma",
+				"subforma",
+				null
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "taxonRank"
+		},
+		"nachweisTaxonKonzept": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe einer Referenz, deren taxonomischem Konzept der im Feld `nachweisTaxonName` verwendete wissenschaftliche Taxonname folgt. Bei historischen Belegen oder Literatur-Nachweisen kann die zugrunde liegende taxonomische Referenz unter Umständen nicht mehr eindeutig rekonstruiert werden. In solchen Fällen ist die Angabe eines null-Werts zulässig. Die Referenzangabe folgt dem Stil: Autor(en) + Erscheinungsjahr. Bei zwei Autor:innen werden die Nachnamen durch ein 'und' getrennt (z. B. Müller und Schmidt 2003). Bei mehr als zwei Autor:innen wird nur der erste Nachname genannt, gefolgt von 'et al.' (z. B. Meier et al. 1998)",
+			"examples": [
+				"Müller et al. 2021",
+				"Buttler et al. 2018",
+				"Schmeil und Fitschen 2016",
+				"Oberdorfer 2001",
+				null
+			],
+			"x-comment": [
+				"Autor(en) + Erscheinungsjahr. Bei mehr als zwei Autoren/Herausgebern wird das Kuerzel 'et al.' angewendet. Bei zwei Autoren werden die beiden Nachnamen durch ein 'und' getrennt"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "nameAccordingTo"
+		},
+		"nachweisTaxonKonzeptListe": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Sortierte Auflistung von Einträgen aus der Taxon-Referenz Datenbank (`nachweisTaxonRefDatenbank`), von breitem nach engem taxonomischem Konzept (Trennzeichen >), wenn der in `nachweisTaxonName` angegebene Name dort mehrfach für unterschiedliche taxonomische Konzepte geführt wird",
+			"examples": [
+				"Müller et al. 2021 > Schmeil und Fitschen 2011 > Oberdorfer 2001"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisTaxonRefDatenbank": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Bezeichnung (incl. Version) der taxonomischen Referenzdatenbank in einem Erfassungssystem",
+			"examples": [
+				"Recorder D ver. 6.25.1.284",
+				"GermanSL ver. 1.51"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisBelegID": {
+			"type": [
+									"string",
+									"number",
+									"null"
+								],
+			"description": "Die eindeutige Identifikationsnummer eines konkreten Belegs in einem Herbar oder einer wissenschaftlichen Sammlung. Diese Kennung dient der Identifikation des physischen Nachweises (z. B. Herbarbelegnummer). Die ID kann standort- oder sammlungsspezifisch sein und ist idealerweise dauerhaft referenzierbar.",
+			"examples": [
+				"IGGT775420",
+				"8653425 ",
+				"GHDGSF-D",
+				"JE0009876"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisTyp` = `Beleg` DANN muss `nachweisBelegID` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "materialEntityID"
+		},
+		"nachweisBelegSammlungsInstitut": {
+			"type": [
+									"string",
+									"null"
+								],
+			"description": "Der Name des Instituts, Museums oder der Sammlung, in der der Beleg aufbewahrt wird. Wenn vorhanden, ist das standardisierte Akronym gemäß Index Herbariorum (https://sweetgum.nybg.org/science/ih/) anzugeben (z. B. B, BONN, JE). Für private Sammlungen ist eine eindeutige Bezeichnung im Format: „herb. [Name]“ zu verwenden - z. B. herb. Müller",
+			"examples": [
+				"BONN",
+				"Leopold Institut",
+				"herb. Müller"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisTyp` = `Beleg` DANN muss `nachweisBelegSammlungsInstitut` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": true,
+			"x-dwc-term": "InstitutionCode"
+		},
+		"nachweisBelegSammlungsInstitutOrt": {
+			"type": [
+									"string",
+									"null"
+								],
+			"description": "Der Ort (Stadt) an dem sich das Institut, Museum oder die Sammlung in der der Beleg aufbewahrt wird befindet. Diese Information ist besonders relevant für private Sammlungen sowie für Institutionen, die nicht im Index Herbariorum verzeichnet sind.",
+			"examples": [
+				"Bonn",
+				"New York",
+				"Leipzig"
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN `nachweisTyp` = `Beleg` DANN muss `nachweisBelegSammlungsInstitutOrt` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisBelegSammlungsInstitutKontakt": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe einer Kontaktadresse, unter der weitere Informationen zum Beleg angefragt werden können.",
+			"examples": [
+				"Nees-Institut Bonn",
+				"Müller F. 65734 Maienburg",
+				"Bio-Institut, Dorfstr. 83, 50678, Köln"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisBelegSammlungsInstitutEmailAdresse": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Eine E-Mail-Adresse, unter der Informationen zu dem Beleg abgefragt werden können",
+			"examples": [
+				"ich.bins@bio.de"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisBelegSammlungsInstitutTelefonNummer": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternTelefonNummer"
+				},
+				{
+					"type": [
+						"string",
+						"null"
+					],
+					"description": "Eine Telefonnummer, unter der Informationen zu dem Beleg abgefragt werden können.",
+					"examples": [
+						"+49 89 1234567",
+						"017564356890",
+						"0049 30 1234567",
+						"(089) 123 456",
+						"030-12345678",
+						"+49-30/12345678"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": false,
+					"x-dwc-term": null
+				}
+			]
+		},
+		"nachweisBelegSammlungsName": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Bezeichnung der Sammlung, unter der der Beleg geführt wird. Dies kann der offizielle Name einer Teilsammlung, Spezialsammlung oder ein interner Sammlungsbereich innerhalb eines Instituts oder Museums sein (z. B. Systematische Sammlung, Sondersammlung X, Exkursion 1984). Die Angabe dient der genaueren Verortung des Belegs innerhalb einer Institution",
+			"examples": [
+				"Samenpflanzen Deutschlands",
+				"Weimar 77",
+				"Sammlung Robert Becker",
+				"Botanische Exkursion Nettetal-2000"
+			],
+			"x-comment": null,
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "CollectionCode"
+		},
+		"nachweisQuelleTyp": {
+			"type": ["string", "null"],
+								"enum": [
+									"Feldbuch",
+									"Buch",
+									"Kartei/Archiv",
+									"Zeitschriftenartikel",
+									"Onlinequelle",
+									 null
+								],
+			"description": "Angabe zum Typ der Quelle, aus der der Nachweis stammt. Dies kann beispielsweise eine veröffentlichte Literaturquelle, eine unveröffentlichte Kartei, ein Archivdokument oder eine digitale Datenquelle sein. Die Angabe hilft bei der inhaltlichen Einordnung und Bewertung des Nachweises",
+			"examples": [
+				"Feldbuch",
+				"Buch",
+				"Kartei",
+				"Wissenschaftlicher Artikel",
+				"Online",
+				null
+			],
+			"x-comment": null,
+			"x-Bedingung": [
+				"WENN nachweisTyp = `Quelle` DANN muss `nachweisQuelleTyp` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisQuellePubliziert": {
+			"type": ["boolean", "null"],
+			"description": "Angabe ob die Quelle publiziert wurde",
+			"examples": [
+				"true",
+				"false"
+			],
+			"x-comment": [
+				"true - Die Quelle ist publiziert.",
+				"false - die Quelle ist nicht publiziert"
+			],
+			"x-Bedingung": [
+				"WENN nachweisTyp = `Quelle` DANN muss `nachweisQuellePubliziert` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisQuelleZitat": {
+			"type": ["string", "null"],
+			"description": "Möglichst vollständige Referenzangabe der Quelle im APA-Stil (https://apastyle.apa.org/). Die Angabe sollte dem offiziellen Format gemäß APA Style folgen, um eine einheitliche und nachvollziehbare Zitierweise zu gewährleisten.Dazu gehören in der Regel: Autorin(nen), Jahr, Titel, ggf. Herausgeberin, Verlag oder Datenquelle, DOI oder URL",
+			"examples": [
+				"Müller, A. (2020). Vorkommen seltener Farnarten im Hunsrück. Botanische Zeitschrift, 128(2), 45-58. https://doi.org/10.1234/bz.2020.04558",
+				"Schneider, L. (2020). Flora des Oberrheins (2. Aufl.). Botanischer Verlag Heidelberg. https://doi.org/10.1234/flora.2020.56789",
+				"Krause, T. (2020, 15. Juni). Verbreitungsdaten von Saxifraga-Arten in Bayern. FloraData Online. https://www.floradata.de/verbreitung/saxifraga",
+				"Meier, F. (1992). Fundkartei Gefäßpflanzen Landkreis Marburg-Biedenkopf [Unveröffentlichte Kartei]. Archiv des Botanischen Vereins Mittelheßen, Marburg"
+			],
+			"x-comment": [
+				"Zeitschriftenartikel: Mueller, A. (2020). Vorkommen seltener Farnarten im Hunsrueck. Botanische Zeitschrift, 128(2), 45-58. https://doi.org/10.1234/bz.2020.04558",
+				"Buch: Schneider, L. (2020). Flora des Oberrheins (2. Aufl.). Botanischer Verlag Heidelberg. https://doi.org/10.1234/flora.2020.56789",
+				"Onlinequelle: Krause, T. (2020, 15. Juni). Verbreitungsdaten von Saxifraga-Arten in Bayern. FloraData Online. https://www.floradata.de/verbreitung/saxifraga",
+				"Unveröffentlichte Quelle (Kartei/Archiv/Feldbuch): Meier, F. (1992). Fundkartei Gefässpflanzen Landkreis Marburg-Biedenkopf [Unveröffentlichte Kartei]. Archiv des Botanischen Vereins Mittelhessen, Marburg"
+			],
+			"x-Bedingung": [
+				"WENN nachweisTyp = `Quelle` DANN muss `nachweisQuelleZitat` angegeben werden und darf nicht `null` sein"
+			],
+			"x-dwc-included": false,
+			"x-dwc-term": null
+		},
+		"nachweisLizenz": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Angabe zum Lizenzmodell, unter dem die Daten verwendet werden dürfen. In der internationalen Praxis haben sich vor allem Creative-Commons-Lizenzen (CC) etabliert, es können jedoch auch andere Lizenzmodelle (z. B. Open Data Commons, nationale Spezialregelungen) angegeben werden. Die Angabe eines Null-Werts ist möglich, wodurch kein Lizenzmodell zugewiesen wird. Wichtig: Beobachtungsdaten unterliegen nicht automatisch dem Urheberrecht. Um eine klare und transparente Nutzung der Daten zu ermöglichen, wird dringend empfohlen, ein Lizenzmodell anzugeben.",
+			"examples": [
+				"CC-BY",
+				"CC BY-SA",
+				"CC BY-ND",
+				"CC BY-NC",
+				"CC BY-NC-SA",
+				"CC BY-NC-ND",
+				null
+			],
+			"x-comment": [
+				"CC BY – Namensnennung. Daten dürfen frei verwendet, bearbeitet und weitergegeben werden – unter Angabe der Urheber:in",
+				"CC BY-SA – Namensnennung, Weitergabe unter gleichen Bedingungen. Bearbeitete Versionen müssen unter derselben Lizenz veröffentlicht werden",
+				"CC BY-ND – Namensnennung, keine Bearbeitung. Weitergabe ist erlaubt, Bearbeitungen jedoch nicht",
+				"CC BY-NC – Namensnennung, nicht-kommerziell. Daten dürfen nicht für kommerzielle Zwecke verwendet werden",
+				"CC BY-NC-SA – Namensnennung, nicht-kommerziell, Weitergabe unter gleichen Bedingungen. Kombination aus Einschränkung der kommerziellen Nutzung und Lizenzbindung für abgeleitete Werke",
+				"CC BY-NC-ND – Namensnennung, nicht-kommerziell, keine Bearbeitung. Strengste CC-Lizenz: keine kommerzielle Nutzung, keine Bearbeitung erlaubt",
+				"null - es wurde kein Lizenzmodell zugewiesen, die Verwendung der Daten ist nicht geregelt. Urheberrecht liegt nicht automatisch vor"
+			],
+			"x-Bedingung": null,
+			"x-dwc-included": true,
+			"x-dwc-term": "licence"
+		},
+		"nachweisVersion": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/patternDatum"
+				},
+				{
+					"type": [
+						"string",
+						"null"
+					],
+					"description": "Datum und ggf. Uhrzeit der letzten Bearbeitung des Nachweises. Diese Information dient der Nachvollziehbarkeit von Änderungen und Aktualisierungen.Die Angabe folgt dem internationalen Standard der ISO (ISO 8601). Es kann ein vollständiges Datum mit sekundengenauer Uhrzeit oder auch nur eine Jahresangabe sein (siehe Beispiele). Für mehr Infomrationen siehe z. B. https://www.w3.org/TR/NOTE-datetime",
+					"examples": [
+						"2024",
+						"2024-04",
+						"2024-04-18",
+						"2024-04-18T12:30:45",
+						"2024-04-18T12:30:45Z",
+						"2024-04-18T12:30:45.123+05:00"
+					],
+					"x-comment": null,
+					"x-Bedingung": null,
+					"x-dwc-included": true,
+					"x-dwc-term": "modified"
+				}
+			]
+		}
+	}
+}

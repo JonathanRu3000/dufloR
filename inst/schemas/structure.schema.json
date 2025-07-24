@@ -1,0 +1,793 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$defs": {
+		"Projekt": {
+			"description": "Mit dem Objekt Projekt werden wichtige Metainformationen zur Interpretation der eigentlichen Kartierungsdaten vermittelt. Sie ermöglichen eine Einschaetzung, ob die Daten z.B. aus einem systematischen, alle Taxa einer Artengruppe umfassenden und für eine Kartierregion erfolgten Erhebungsprojekt stammen (z.B. bei einer floristischen Rasterkartierung). Auch wenn Daten nur unsystematisch z.B. bei Einzelexkursionen ohne spezifischen Projekthintergrund erhoben wurden, soll ein Projekt (z.B. Exkursionsnotizen Max Mustermann) mit Projekttyp `unsystematische` eingetragen werden",
+			"type": "object",
+			"properties": {
+				"projektID": {
+					"$ref": "entities.schema.json#/$defs/projektID"
+				},
+				"projektName": {
+					"$ref": "entities.schema.json#/$defs/projektName"
+				},
+				"projektTyp": {
+					"$ref": "entities.schema.json#/$defs/projektTyp"
+				},
+				"projektRegion": {
+					"$ref": "entities.schema.json#/$defs/projektRegion"
+				},
+				"projektRegionUmriss": {
+					"$ref": "entities.schema.json#/$defs/projektRegionUmriss"
+				},
+				"projektRegionUmrissCRS": {
+					"$ref": "entities.schema.json#/$defs/projektRegionUmrissCRS"
+				},
+				"projektTaxon": {
+					"$ref": "entities.schema.json#/$defs/projektTaxon"
+				},
+				"projektUrl": {
+					"$ref": "entities.schema.json#/$defs/projektUrl"
+				},
+				"projektLeitung": {
+					"$ref": "entities.schema.json#/$defs/projektLeitung"
+				},
+				"projektLeitungKontakt": {
+					"$ref": "entities.schema.json#/$defs/projektLeitungKontakt"
+				},
+				"projektLeitungEmailAdresse": {
+					"$ref": "entities.schema.json#/$defs/projektLeitungEmailAdresse"
+				},
+				"projektLeitungTelefonNummer": {
+					"$ref": "entities.schema.json#/$defs/projektLeitungTelefonNummer"
+				}
+			},
+			"required": [
+				"projektID",
+				"projektName",
+				"projektTyp",
+				"projektRegion",
+				"projektLeitung"
+			],
+			"allOf": [
+				{
+					"if": {
+						"properties": {
+							"projektRegionUmriss": {
+								"type": "null"
+							}
+						},
+						"required": [
+							"projektRegionUmriss"
+						]
+					},
+					"then": {
+						"properties": {
+							"projektRegionUmrissCRS": {
+								"type": "null"
+							}
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"projektRegionUmriss": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"projektRegionUmriss"
+						]
+					},
+					"then": {
+						"properties": {
+							"projektRegionUmrissCRS": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			],
+			"dependencies": {
+				"projektRegionUmrissCRS": [
+					"projektRegionUmriss"
+				]
+			}
+		},
+		"Ereignis": {
+			"description": "Durch das Objekt `Ereignis` können Nachweise zusätzlich zu dem Projekt weiter sinnhaft miteinander verbunden werden, z.B nach Unterprojekten, einzelnen Begehungen, Exkursionen etc. Das Ereignis kann muss aber nicht in direktem Bezug zum Projekt stehen",
+			"type": "object",
+			"properties": {
+				"ereignisID": {
+					"$ref": "entities.schema.json#/$defs/ereignisID"
+				},
+				"ereignisName": {
+					"$ref": "entities.schema.json#/$defs/ereignisName"
+				},
+				"ereignisDatum": {
+					"$ref": "entities.schema.json#/$defs/ereignisDatum"
+				}
+			}
+		},
+		"Lokalitaet": {
+			"type": "object",
+			"description": "Mit dem Objekt `Lokalitaet` werden Daten zum Ort (Erfassungseinheit) eines Nachweises erhoben. Dieser kann einen primären Raumbezug darstellen (Erhebungseinheit) oder einen sekundären Raumbezug (Aggregierungseinheit). Es sollten nach Möglichkeit punktscharfe Koordinaten für einen Nachweis hinterlegt werden",
+			"properties": {
+				"lokalitaetID": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetID"
+				},
+				"lokalitaetName": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetName"
+				},
+				"lokalitaetTyp": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetTyp"
+				},
+				"lokalitaetFlaeche": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetFlaeche"
+				},
+				"lokalitaetLaenge": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetLaenge"
+				},
+				"lokalitaetHoeheMin": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetHoeheMin"
+				},
+				"lokalitaetHoeheMax": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetHoeheMax"
+				},
+				"lokalitaetHoeheBezugssystem": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetHoeheBezugssystem"
+				},
+				"lokalitaetKoordinaten": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetKoordinaten"
+				},
+				"lokalitaetKoordinatenUnschaerfe": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetKoordinatenUnschaerfe"
+				},
+				"lokalitaetKoordinatenCRS": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetKoordinatenCRS"
+				},
+				"lokalitaetKoordinatenCentroid": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetKoordinatenCentroid"
+				},
+				"lokalitaetKoordinatenCentroidUnschaerfe": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetKoordinatenCentroidUnschaerfe"
+				},
+				"lokalitaetAggregiert": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetAggregiert"
+				},
+				"lokalitaetKoordinatenGenerierung": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetKoordinatenGenerierung"
+				}
+			},
+			"required": [
+				"lokalitaetID",
+				"lokalitaetTyp",
+				"lokalitaetKoordinaten",
+				"lokalitaetKoordinatenCRS",
+				"lokalitaetAggregiert"
+			],
+			"allOf": [
+				{
+					"if": {
+						"properties": {
+							"lokalitaetTyp": {
+								"enum": [
+									"Polygonflaeche",
+									"Rasterfeld"
+								]
+							}
+						}
+					},
+					"then": {
+						"properties": {
+							"lokalitaetKoordinaten": {
+								"$ref": "entities.schema.json#/$defs/patternKoordinatenPolygon"
+							}
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"lokalitaetTyp": {
+								"const": "Transektlinie"
+							}
+						}
+					},
+					"then": {
+						"properties": {
+							"lokalitaetKoordinaten": {
+								"$ref": "entities.schema.json#/$defs/patternKoordinatenLinie"
+							}
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"lokalitaetTyp": {
+								"const": "Punkt"
+							}
+						}
+					},
+					"then": {
+						"properties": {
+							"lokalitaetKoordinaten": {
+								"$ref": "entities.schema.json#/$defs/patternKoordinatenPunkt"
+							}
+						}
+					}
+				}
+			]
+		},
+		"Person": {
+			"description": "Die kartierende Person als Quelle des Nachweises. Nicht obligat. Ueber `personID` koennen Zuordnungen von Nachweisen pseudonymisiert vorgenommen werden. Ein Klarname muss nicht angegeben werden",
+			"type": "object",
+			"properties": {
+				"personID": {
+					"$ref": "entities.schema.json#/$defs/personID"
+				},
+				"personName": {
+					"$ref": "entities.schema.json#/$defs/personName"
+				}
+			}
+		},
+		"Nachweis": {
+			"type": "object",
+			"description": "Das Objekt `Nachweis` beinhaltet Angaben über den Nachweis an sich als auch Angabe über das Taxon",
+			"properties": {
+				"projektID": {
+					"$ref": "entities.schema.json#/$defs/projektID"
+				},
+				"ereignisID": {
+					"$ref": "entities.schema.json#/$defs/ereignisID"
+				},
+				"lokalitaetID": {
+					"$ref": "entities.schema.json#/$defs/lokalitaetID"
+				},
+				"personID": {
+					"$ref": "entities.schema.json#/$defs/personID"
+				},
+				"nachweisID": {
+					"$ref": "entities.schema.json#/$defs/nachweisID"
+				},
+				"nachweisDatum": {
+					"$ref": "entities.schema.json#/$defs/nachweisDatum"
+				},
+				"nachweisVorkommenStatus": {
+					"$ref": "entities.schema.json#/$defs/nachweisVorkommenStatus"
+				},
+				"nachweisVorkommenAnsiedlung": {
+					"$ref": "entities.schema.json#/$defs/nachweisVorkommenAnsiedlung"
+				},
+				"nachweisQuantitaetTyp": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuantitaetTyp"
+				},
+				"nachweisQuantitaetWert": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuantitaetWert"
+				},
+				"nachweisQuantitaetKlassen": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuantitaetKlassen"
+				},
+				"nachweisQuantitaetZaehlEinheit": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuantitaetZaehlEinheit"
+				},
+				"nachweisQuantitaetMethode": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuantitaetMethode"
+				},
+				"nachweisBestimmungVon": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungVon"
+				},
+				"nachweisBestimmungWoertlich": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungWoertlich"
+				},
+				"nachweisBestimmungDatum": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungDatum"
+				},
+				"nachweisBestimmungRevidiertVon": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungRevidiertVon"
+				},
+				"nachweisBestimmungRevidiertDatum": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungRevidiertDatum"
+				},
+				"nachweisBestimmungPruefStatus": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungPruefStatus"
+				},
+				"nachweisBestimmungPruefStatusInfo": {
+					"$ref": "entities.schema.json#/$defs/nachweisBestimmungPruefStatusInfo"
+				},
+				"nachweisTaxonFloristischerStatus": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonFloristischerStatus"
+				},
+				"nachweisTaxonFloristischerStatusBezugsRaum": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonFloristischerStatusBezugsRaum"
+				},
+				"nachweisTaxonDauerhaftigkeit": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonDauerhaftigkeit"
+				},
+				"nachweisTaxonName": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonName"
+				},
+				"nachweisTaxonNameID": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonNameID"
+				},
+				"nachweisTaxonNameAkzeptiert": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonNameAkzeptiert"
+				},
+				"nachweisTaxonNameAkzeptiertID": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonNameAkzeptiertID"
+				},
+				"nachweisTaxonRang": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonRang"
+				},
+				"nachweisTaxonKonzept": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonKonzept"
+				},
+				"nachweisTaxonKonzeptListe": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonKonzeptListe"
+				},
+				"nachweisTaxonRefDatenbank": {
+					"$ref": "entities.schema.json#/$defs/nachweisTaxonRefDatenbank"
+				},
+				"nachweisTyp": {
+					"$ref": "entities.schema.json#/$defs/nachweisTyp"
+				},
+				"nachweisBelegID": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegID"
+				},
+				"nachweisBelegSammlungsInstitut": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegSammlungsInstitut"
+				},
+				"nachweisBelegSammlungsInstitutOrt": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegSammlungsInstitutOrt"
+				},
+				"nachweisBelegSammlungsInstitutKontakt": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegSammlungsInstitutKontakt"
+				},
+				"nachweisBelegSammlungsInstitutEmailAdresse": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegSammlungsInstitutEmailAdresse"
+				},
+				"nachweisBelegSammlungsInstitutTelefonNummer": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegSammlungsInstitutTelefonNummer"
+				},
+				"nachweisBelegSammlungsName": {
+					"$ref": "entities.schema.json#/$defs/nachweisBelegSammlungsName"
+				},
+				"nachweisQuelleTyp": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuelleTyp"
+				},
+				"nachweisQuellePubliziert": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuellePubliziert"
+				},
+				"nachweisQuelleZitat": {
+					"$ref": "entities.schema.json#/$defs/nachweisQuelleZitat"
+				},
+				"nachweisLizenz": {
+					"$ref": "entities.schema.json#/$defs/nachweisLizenz"
+				},
+				"nachweisVersion": {
+					"$ref": "entities.schema.json#/$defs/nachweisVersion"
+				}
+			},
+			"allOf": [
+				{
+					"allOf": [
+						{
+							"if": {
+								"properties": {
+									"nachweisTaxonFloristischerStatus": {
+										"type": "null"
+									}
+								},
+								"required": [
+									"nachweisTaxonFloristischerStatus"
+								]
+							},
+							"then": {
+								"properties": {
+									"nachweisTaxonFloristischerStatusBezugsRaum": {
+										"type": "null"
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"nachweisTaxonFloristischerStatus": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"nachweisTaxonFloristischerStatus"
+								]
+							},
+							"then": {
+								"properties": {
+									"nachweisTaxonFloristischerStatusBezugsRaum": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					]
+				},
+				{
+					"allOf": [
+						{
+							"if": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "null"
+									}
+								},
+								"required": [
+									"nachweisQuantitaetTyp"
+								]
+							},
+							"then": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "null"
+									},
+									"nachweisQuantitaetWert": {
+										"type": "null"
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "KlasseHaeufigkeit"
+									}
+								},
+								"required": [
+									"nachweisQuantitaetTyp"
+								]
+							},
+							"then": {
+								"required": [
+									"nachweisQuantitaetTyp",
+									"nachweisQuantitaetKlassen",
+									"nachweisQuantitaetWert"
+								],
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "KlasseHaeufigkeit"
+									},
+									"nachweisQuantitaetWert": {
+										"type": [
+											"string",
+											"number"
+										]
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "Zaehleinheit"
+									}
+								},
+								"required": [
+									"nachweisQuantitaetTyp"
+								]
+							},
+							"then": {
+								"required": [
+									"nachweisQuantitaetTyp",
+									"nachweisQuantitaetZaehlEinheit",
+									"nachweisQuantitaetWert"
+								],
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "Zaehleinheit"
+									},
+									"nachweisQuantitaetWert": {
+										"type": [
+											"string",
+											"number"
+										]
+									},
+									"nachweisQuantitaetZaehlEinheit": {
+										"type": [
+											"string"
+										],
+										"enum": [
+											"Individuen",
+											"Sprosse",
+											"Horste",
+											"Flaeche"
+										]
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "DeckungBraunBlanquet"
+									}
+								},
+								"required": [
+									"nachweisQuantitaetTyp"
+								]
+							},
+							"then": {
+								"required": [
+									"nachweisQuantitaetTyp",
+									"nachweisQuantitaetWert"
+								],
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "DeckungBraunBlanquet"
+									},
+									"nachweisQuantitaetWert": {
+										"type": "string",
+										"enum": [
+											"r",
+											"+",
+											"1",
+											"2m",
+											"2a",
+											"2b",
+											"3",
+											"4",
+											"5"
+										]
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "ProzentDeckung"
+									}
+								},
+								"required": [
+									"nachweisQuantitaetTyp"
+								]
+							},
+							"then": {
+								"required": [
+									"nachweisQuantitaetTyp",
+									"nachweisQuantitaetWert"
+								],
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "ProzentDeckung"
+									},
+									"nachweisQuantitaetWert": {
+										"type": [
+											"string",
+											"number"
+										],
+										"exclusiveMinimum": 0,
+										"maximum": 100
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "DeckungLondo"
+									}
+								},
+								"required": [
+									"nachweisQuantitaetTyp"
+								]
+							},
+							"then": {
+								"required": [
+									"nachweisQuantitaetTyp",
+									"nachweisQuantitaetWert"
+								],
+								"properties": {
+									"nachweisQuantitaetTyp": {
+										"type": "string",
+										"const": "DeckungLondo"
+									},
+									"nachweisQuantitaetWert": {
+										"type": [
+											"string",
+											"number"
+										],
+										"enum": [
+											"+",
+											"1",
+											"2",
+											"3",
+											"4",
+											"5",
+											"6",
+											"7"
+										]
+									}
+								}
+							}
+						}
+					]
+				},
+				{
+					"oneOf": [
+						{
+							"properties": {
+								"nachweisTyp": {
+									"const": "Beobachtung"
+								}
+							},
+							"required": [
+								"projektID",
+								"lokalitaetID",
+								"nachweisID",
+								"nachweisDatum",
+								"nachweisVorkommenStatus",
+								"nachweisTaxonName",
+								"nachweisTaxonNameAkzeptiert",
+								"nachweisTaxonKonzept",
+								"nachweisBestimmungPruefStatus",
+								"nachweisTyp",
+								"nachweisLizenz"
+							],
+							"additionalProperties": true
+						},
+						{
+							"properties": {
+								"nachweisTyp": {
+									"const": "Beleg"
+								},
+								"nachweisBelegID": {
+									"type": [
+										"string",
+										"number"
+									]
+								},
+								"nachweisBelegSammlungsInstitut": {
+									"type": "string"
+								},
+								"nachweisBelegSammlungsInstitutOrt": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"projektID",
+								"lokalitaetID",
+								"nachweisID",
+								"nachweisDatum",
+								"nachweisVorkommenStatus",
+								"nachweisTaxonName",
+								"nachweisTaxonNameAkzeptiert",
+								"nachweisTaxonKonzept",
+								"nachweisBestimmungPruefStatus",
+								"nachweisTyp",
+								"nachweisLizenz",
+								"nachweisBelegID",
+								"nachweisBelegSammlungsInstitut",
+								"nachweisBelegSammlungsInstitutOrt"
+							],
+							"additionalProperties": true
+						},
+						{
+							"properties": {
+								"nachweisTyp": {
+									"const": "Quelle"
+								},
+								"nachweisQuelleTyp": {
+									"type": "string",
+									"enum": [
+										"Feldbuch",
+										"Buch",
+										"Kartei/Archiv",
+										"Zeitschriftenartikel",
+										"Onlinequelle"
+									]
+								},
+								"nachweisQuellePubliziert": {
+									"type": "boolean"
+								},
+								"nachweisQuelleZitat": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"projektID",
+								"lokalitaetID",
+								"nachweisID",
+								"nachweisDatum",
+								"nachweisVorkommenStatus",
+								"nachweisTaxonName",
+								"nachweisTaxonNameAkzeptiert",
+								"nachweisTaxonKonzept",
+								"nachweisBestimmungPruefStatus",
+								"nachweisTyp",
+								"nachweisLizenz",
+								"nachweisQuelleTyp",
+								"nachweisQuellePubliziert",
+								"nachweisQuelleZitat"
+							],
+							"additionalProperties": true
+						}
+					]
+				}
+			],
+			"dependencies": {
+				"nachweisQuantitaetWert": [
+					"nachweisQuantitaetTyp"
+				],
+				"nachweisQuantitaetZaehlEinheit": [
+					"nachweisQuantitaetTyp"
+				],
+				"nachweisTaxonFloristischerStatusBezugsRaum": [
+					"nachweisTaxonFloristischerStatus"
+				]
+			}
+		}
+	},
+	"type": "object",
+	"properties": {
+		"Projekte": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/Projekt"
+			},
+			"minItems": 1
+		},
+		"Ereignisse": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/Ereignis"
+			},
+			"minItems": 0
+		},
+		"Lokalitaeten": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/Lokalitaet"
+			},
+			"minItems": 1,
+			"required": [
+				"items"
+			]
+		},
+		"Personen": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/Person"
+			},
+			"minItems": 0
+		},
+		"Nachweise": {
+			"type": "array",
+			"items": {
+				"$ref": "#/$defs/Nachweis"
+			},
+			"minItems": 1
+		}
+	},
+	"required": [
+		"Projekte",
+		"Ereignisse",
+		"Lokalitaeten",
+		"Personen",
+		"Nachweise"
+	]
+}

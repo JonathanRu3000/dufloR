@@ -1,0 +1,36 @@
+Package: dufloR
+Type: Package
+Title: Datenstandard für uniforme floristische Funddaten
+Version: 0.0.0
+Authors@R: 
+    person(given = "Jonathan",
+           family = "Ruhm",
+           role = c("aut", "cre"),
+           email = "jonathan.ruhm@bfn.de",
+           comment = c(ORCID = ""))
+Description: Zur Validierung floristischer Funddaten gegen den DUFLOR-Datenstandard. 
+    Das Paket ermöglicht die strukturierte Überprüfung von Datensätzen gemäß einem 
+    definierten JSON-Schema, unterstützt die Erstellung synthetischer Testdaten 
+    und die Analyse typischer Validierungsfehler.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Depends: R (>= 4.0.0)
+Imports:
+    dplyr,
+    tidyr,
+    tibble,
+    stringr,
+    jsonlite,
+    jsonvalidate,
+    purrr,
+    uuid
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown,
+    devtools
+VignetteBuilder: knitr
+URL: https://gitlab.deinprojekturl.de/dufloR
+BugReports: https://gitlab.deinprojekturl.de/dufloR/issues

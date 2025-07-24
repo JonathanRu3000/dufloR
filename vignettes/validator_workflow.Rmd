@@ -1,0 +1,126 @@
+---
+title: "Validierung floristischer Funddaten mit `dufloR`"
+author: "Jonathan Ruhm (Bundesamt für Naturschutz) <jonthan.ruhm@bfn.de>"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Validierung floristischer Funddaten mit DUFLOR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+devtools::load_all()
+```
+
+# Einleitung
+
+Diese Vignette beschreibt die Anwendung des Pakets **dufloR** zur Validierung floristischer Funddaten gegen den DUFLOR-Datenstandard (Version XX, REF). Ziel ist es, die Qualität floristischer Funddaten zu sichern, indem diese gegen ein strukturelles JSON-Schema geprüft werden. Neben der Validierung unterstützt das Paket auch die Generierung synthetischer Testdatensätze zur Simulation typischer Datenfehler.
+
+---
+
+# 1. Generierung eines vollständigen Testdatensatzes
+
+Die Funktion `generate_floristic_occdata()` erzeugt realitätsnahe, synthetische Testdaten für floristische Projekte, Lokalitäten, Personen, Ereignisse und Nachweise. Diese Daten können optional als CSV gespeichert werden und sind direkt für Validierung und Tests geeignet.
+
+```{r generate-testdata}
+i <- generate_floristic_occdata(
+  n_projekte = 50,
+  n_lokalitaeten = 20,
+  n_personen = 20,
+  n_ereignisse = 30,
+  n_nachweise = 100,
+  seed = 42
+)
+```
+
+---
+
+# 2. Einlesen und Validierung von Testdaten
+
+Der generierte Beispieldatensatz ist im Paket auch direkt über `data()` verfügbar. Alternativ stehen CSV- und JSON-Versionen in `inst/extdata/` bereit. Die Funktion `validate_floristic_data()` kann mit allen Formaten umgehen.
+
+## 2.1 Laden der Testdaten
+
+```{r load-input}
+# Lade eingebetteten Beispieldatensatz
+data("test_nachweisdaten")
+
+# Alternativ: CSV laden
+csv_path <- system.file("extdata", "test_nachweisdaten.csv", package = "dufloR")
+input_df <- read.csv(csv_path, encoding = "UTF-8", stringsAsFactors = FALSE)
+
+# Optional: JSON laden
+json_path <- system.file("extdata", "test_nachweisdaten.json", package = "dufloR")
+json_data <- jsonlite::fromJSON(json_path)
+```
+
+## 2.2 Beispielhafter Blick in die Daten
+
+```{r show-head}
+head(input_df[, 1:3])
+```
+
+## 2.3 Validierung der CSV-Daten
+
+```{r validate-main, message=TRUE}
+val_output <- validate_floristic_occdata(
+  input = input_df,
+  schema = system.file("schemas", "structure.schema.json", package = "dufloR"),
+  verbose = TRUE
+)
+
+# Ergebnisse prüfen
+val_output$json_valid
+val_output$missing_fields
+val_output$validation_errors
+```
+
+---
+
+# 3. Generierung strukturierter Testfälle
+
+Die Funktion `generate_test_cases()` erstellt gezielt manipulierte Versionen des Originaldatensatzes, z.B. durch Entfernen von Spalten oder das Ersetzen durch `NA`-Werte.
+
+```{r test-cases, message=TRUE}
+test_cases <- generate_test_cases(
+  input_df = input_df,
+  n_single_cases = 6,
+  n_multi_cases = 4,
+  randomize = TRUE,
+  seed = 123,
+  verbose = TRUE
+)
+```
+
+---
+
+# 4. Validierung der generierten Testfälle
+
+Alle erstellten Testfälle lassen sich automatisiert mit `validate_test_cases()` überprüfen. Die Ergebnisse zeigen, welche Testfälle das Schema erfüllen und wo Fehler auftreten.
+
+```{r validate-testcases, message=TRUE}
+validation_results <- validate_test_cases(test_cases)
+
+# Übersicht der Prüfergebnisse
+head(validation_results$summary)
+```
+
+---
+
+# Fazit
+
+Mit dem Paket **dufloR** lassen sich floristische Funddaten effizient und nachvollziehbar gegen den DUFLOR-Datenstandard prüfen. Es bietet:
+
+- Vollständige synthetische Testdatensätze  
+- Simulation typischer Fehlerfälle  
+- Automatisierte Validierung im Batch-Modus  
+- Klare Ausgabe von Fehlern und Prüfergebnissen  
+
+Damit unterstützt **dufloR** aktiv die Qualitätssicherung in floristischen Datenprojekten und fördert eine standardkonformen Datenaustausch.

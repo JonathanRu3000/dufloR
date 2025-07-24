@@ -1,0 +1,98 @@
+README – dufloR
+================
+
+# ✅ dufloR – DUFLOR Data Validator
+
+## 🧾 Beschreibung
+
+**dufloR** ist ein R-Paket zur **Validierung floristischer Funddaten**
+gemäß dem offiziellen  
+**DUFLOR-Datenstandard** (Datenstandard für uniforme floristische
+Funddaten, Bundesamt für Naturschutz).
+
+Das Paket bietet Funktionen zur:
+
+- strukturierten Prüfung von Beobachtungs- und Nachweisdaten gegen ein
+  JSON-Schema  
+- Erstellung synthetischer Testdatensätze  
+- Generierung typischer Validierungsfehler zur Testabdeckung
+
+**Autor**: Jonathan Ruhm (Bundesamt für Naturschutz)  
+**Lizenz**: MIT
+
+------------------------------------------------------------------------
+
+## 📦 Installation
+
+``` r
+# Lokal installieren (nach Klonen oder Download)
+devtools::install("pfad/zum/dufloR")
+
+# Oder direkt von GitLab (sofern öffentlich oder mit Token)
+devtools::install_gitlab("username/dufloR", host = "gitlab.com")
+```
+
+## 📂 Inhalte
+
+### 🔍 Hauptfunktionen
+
+| Funktion | Beschreibung |
+|----|----|
+| `validate_floristic_occdata()` | Validiert floristische Daten gegen das DUFLOR-Schema |
+| `generiere_floristic_occdata()` | Erstellt vollständigen, verknüpften Beispieldatensatz |
+| `generate_test_cases()` | Erstellt gezielt fehlerhafte Testfälle |
+| `validate_test_cases()` | Prüft mehrere Testfälle auf Schema-Konformität |
+
+## 📊 Beispieldaten
+
+Das Paket liefert interne und externe Beispieldatensätze:
+
+``` r
+# Internen Beispieldatensatz laden
+data("test_nachweisdaten")
+head(test_nachweisdaten[, 1:5])
+```
+
+Externe Formate im Ordner inst/extdata/:
+
+- test_nachweisdaten.csv
+- test_nachweisdaten.json
+- test_nachweisdaten.rds
+
+Diese lassen sich direkt in validate_floristic_data() einlesen.
+
+### 🧪 Beispiel: Validierung eines Testdatensatzes
+
+``` r
+# CSV-Datei aus dem Paket laden
+csv_path <- system.file("extdata", "test_nachweisdaten.csv", package = "dufloR")
+input_df <- read.csv(csv_path, encoding = "UTF-8")
+
+# Optional: Einblick in den Datensatz
+head(input_df[, 1:5])
+
+# Validierung starten
+val_output <- validate_floristic_data(
+  input = input_df,
+  schema = system.file("schemas", "structure.schema.json", package = "dufloR"),
+  verbose = TRUE
+)
+
+# Ergebnisse anzeigen
+val_output$json_valid
+val_output$missing_fields
+val_output$validation_errors
+```
+
+## ✅ Fazit
+
+Mit dufloR lassen sich floristische Funddaten systematisch auf ihre
+strukturelle Gültigkeit prüfen. Das Paket unterstützt:
+
+- die Validierung echter Beobachtungsdaten
+- die Erstellung vollständiger synthetischer Testdaten
+- die Simulation von typischen Fehlern
+- die strukturierte Auswertung von Prüfergebnissen
+
+dufloR fördert so die Datenqualität und Standardkonformität in
+floristischen Projekten.
