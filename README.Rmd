@@ -28,7 +28,7 @@ Das Paket bietet Funktionen zur:
 devtools::install("pfad/zum/dufloR")
 
 # Oder direkt von GitHub
-devtools::install_github("JonathanRu3000/dufloR", host = "gitlab.com")
+devtools::install_github("JonathanRu3000/dufloR")
 ```
 
 ## 📂 Inhalte

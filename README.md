@@ -28,8 +28,8 @@ Das Paket bietet Funktionen zur:
 # Lokal installieren (nach Klonen oder Download)
 devtools::install("pfad/zum/dufloR")
 
-# Oder direkt von GitLab (sofern öffentlich oder mit Token)
-devtools::install_gitlab("username/dufloR", host = "gitlab.com")
+# Oder direkt von GitHub
+devtools::install_github("JonathanRu3000/dufloR")
 ```
 
 ## 📂 Inhalte
