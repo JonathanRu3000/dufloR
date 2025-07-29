@@ -1,17 +1,12 @@
-#' dufloR: Datenstandrad zur validierung floristischer Funddaten in R
+#' dufloR: Ein Paket zur Validierung floristischer Funddaten in R
 #'
-#' dufloR ist ein R-Paket zur Validierung floristischer Funddaten gemäß dem offiziellen
-#' DUFLOR-Datenstandard (Datenstandard für uniforme floristische Funddaten, Bundesamt für Naturschutz).
+#' dufloR ist ein R-Paket zur Validierung floristischer Funddaten gemaess dem offiziellen
+#' DUFLOR-Datenstandard (Datenstandard fuer uniforme floristische Funddaten, Bundesamt fuer Naturschutz).
+#'
 #' Das Paket bietet Funktionen zur:
-#' strukturierten Prüfung von Beobachtungs- und Nachweisdaten gegen ein JSON-Schema
-#' Erstellung synthetischer Testdatensätze
-#' Generierung typischer Validierungsfehler zur Testabdeckung
+#' - strukturierten Pruefung von Beobachtungs- und Nachweisdaten gegen ein JSON-Schema
+#' - Erstellung synthetischer Testdatensaetze
+#' - Generierung typischer Validierungsfehler zur Testabdeckung
 #'
-#' Autor: Jonathan Ruhm (Bundesamt für Naturschutz)
-#' Lizenz: MIT
-#'
-#' @docType package
-#' @name duflor
-#' @aliases duflor-package
-#' @keywords package
-NULL
+#' @keywords internal
+"_PACKAGE"

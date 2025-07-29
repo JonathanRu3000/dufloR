@@ -9,7 +9,7 @@ Authors@R:
            email = "jonathan.ruhm@bfn.de",
            comment = c(ORCID = ""))
 Description: Zur Validierung floristischer Funddaten gegen den DUFLOR-Datenstandard. 
-    Das Paket ermoeglicht die strukturierte Ueberpruefung von Datensaetzen gemaeﬂ einem 
+    Das Paket ermoeglicht die strukturierte Ueberpruefung von Datensaetzen gemaess einem 
     definierten JSON-Schema, unterstuetzt die Erstellung synthetischer Testdaten 
     und die Analyse typischer Validierungsfehler.
 License: MIT + file LICENSE
