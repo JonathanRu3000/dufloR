@@ -32,5 +32,5 @@ Suggests:
     rmarkdown,
     devtools
 VignetteBuilder: knitr
-URL: https://gitlab.deinprojekturl.de/dufloR
-BugReports: https://gitlab.deinprojekturl.de/dufloR/issues
+URL: https://github.com/JonathanRu3000/dufloR
+BugReports: https://github.com/JonathanRu3000/dufloR/issues
