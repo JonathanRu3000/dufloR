@@ -1,6 +1,6 @@
 Package: dufloR
 Type: Package
-Title: Datenstandard für uniforme floristische Funddaten
+Title: Datenstandard fuer uniforme floristische Funddaten
 Version: 0.0.0
 Authors@R: 
     person(given = "Jonathan",
