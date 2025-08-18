@@ -405,7 +405,6 @@
 				"number",
 				"null"
 			],
-			"pattern": "^\\d+(?:/\\d+)?$",
 			"description": "Höhenangabe (wenn nicht anders in `lokalitaetHoeheBezugssystem' angegeben in Metern). Hier der höchste Punkt der Lokalität. Wenn angegeben, bezogen auf das Höhendatum in `lokalitaetHoeheBezugssystem`,",
 			"examples": [
 				1100,
@@ -423,7 +422,6 @@
 				"number",
 				"null"
 			],
-			"pattern": "^\\d+(?:/\\d+)?$",
 			"description": "Höhenangabe (wenn nicht anders in `lokalitaetHoeheBezugssystem' angegeben in Metern). Hier der niedrigste Punkt der Lokalität. Wenn angegeben, bezogen auf das Höhendatum in `lokalitaetHoeheBezugssystem`,",
 			"examples": [
 				1100,
