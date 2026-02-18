@@ -1,13 +1,11 @@
-README – dufloR
-================
-
 > ⚠️ **Status: EXPERIMENTELL / NICHT FÜR PRODUKTION**
 >
 > Dieses R-Package ist eine frühe Vorschau und noch nicht einsatzbereit.
 > Funktionen, Namen und Ergebnisse können sich jederzeit ändern.
 > Bitte aktuell **nicht verwenden** – Feedback über Issues ist willkommen.
 
-
+README – dufloR
+================
 
 # ✅ dufloR – DUFLOR Data Validator
 
